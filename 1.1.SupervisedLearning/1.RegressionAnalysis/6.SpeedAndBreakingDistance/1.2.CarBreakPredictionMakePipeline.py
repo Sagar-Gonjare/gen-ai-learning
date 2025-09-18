@@ -1,12 +1,12 @@
 import pandas as pd 
-from sklearn.preprocessing  import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
-
+from sklearn.preprocessing  import PolynomialFeatures
 import matplotlib.pyplot as plt 
+from sklearn.pipeline import make_pipeline
 
 df = pd.read_csv("speed_and_breaking_distance.csv")
 
-x = df.drop( columns = ['c'] , axis=1)
+x = df.drop(columns= ['BrakingDistance'])
 y = df['BrakingDistance']
 
 plt.scatter(df['Speed']  , y )
@@ -15,11 +15,10 @@ plt.ylabel('BrakingDistance')
 plt.title('Speed vs BrakingDistance')
 plt.show()
 
-poly = PolynomialFeatures(degree=2)
-x_poly = poly.fit_transform(x)
+degree = 2
+model = make_pipeline(PolynomialFeatures(degree), LinearRegression())
 
-model = LinearRegression()
-model.fit(x_poly , y)
+model.fit(x,y)
 
-output = model.predict(poly.fit_transform([[48]]))
+output = model.predict(pd.DataFrame([[48]]))
 print(output[0])
